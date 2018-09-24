@@ -1,6 +1,26 @@
-import socket
+#import socket
 import sys
+import time
+import zmq
 
+port = '4445'
+if len(sys.argv) > 1:
+    port =  sys.argv[1]
+    int(port)
+context = zmq.Context()
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:%s" % port)
+print("binded to port %s" % port)
+
+while True:
+    #  Wait for next request from client
+    message = socket.recv()
+    print "Received: ", message
+    time.sleep (1)  
+    socket.send("ack %s" % port)
+
+    
+""" Below is Socket implementation, obsolete
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Find correct IP socket
@@ -35,3 +55,5 @@ while True:
     finally:
         # Clean up the connection
         connection.close()
+
+"""

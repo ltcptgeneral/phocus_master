@@ -1,8 +1,30 @@
-from socket import *
+#from socket import *
 import sys
+import zmq
+import random
 
+port = "4445"
+if len(sys.argv) > 1:
+    port =  sys.argv[1]
+    int(port)
+    
+context = zmq.Context()
+print "Connecting to server..."
+socket = context.socket(zmq.REQ)
+socket.connect ("tcp://localhost:%s" % port)
+if len(sys.argv) > 2:
+    socket.connect ("tcp://localhost:%s" % port1)
+    
+#  Do 10 requests, waiting each time for a response
+print "Sending request "
+socket.send (str(random.randint(-100, 100)))
+#  Get the reply.
+message = socket.recv()
+print "Received: ", "[", message, "]"
+
+"""
 def get_constants(prefix):
-    """Create a dictionary mapping socket module constants to their names."""
+    #Create a dictionary mapping socket module constants to their names.
     return dict( (getattr(socket, n), n)
                  for n in dir(socket)
                  if n.startswith(prefix)
@@ -39,3 +61,6 @@ try:
 finally:
     print >>sys.stderr, 'closing socket'
     sock.close()
+
+
+"""
